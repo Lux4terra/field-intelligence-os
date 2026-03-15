@@ -6,14 +6,14 @@
 <title>Field Intelligence OS — Kanazi</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
-:root{--ink:#080808;--cream:#f8f6f0;--gold:#c9a84c;--rule:#e0ddd5;--muted:#777;--green:#4caf88}
+:root{--ink:#080808;--cream:#f8f6f0;--gold:#c9a84c;--rule:#e0ddd5;--muted:#777;--green:#4caf88;--red:#cc4444;--amber:#e8a020}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
 nav{background:var(--ink);padding:0 32px;height:50px;display:flex;align-items:center;justify-content:space-between}
 .nav-title{font-family:'Merriweather',serif;font-size:.78em;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff}
 .nav-tag{font-size:.6em;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid #333;padding:4px 10px}
-.tab-bar{background:#fff;border-bottom:2px solid var(--ink);padding:0 32px;display:flex;gap:0;overflow-x:auto}
-.tab{padding:14px 18px;font-size:.68em;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',sans-serif;white-space:nowrap}
+.tab-bar{background:#fff;border-bottom:2px solid var(--ink);padding:0 24px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:14px 16px;font-size:.65em;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',sans-serif;white-space:nowrap}
 .tab:hover{color:var(--ink)}
 .tab.on{color:var(--ink);border-bottom-color:var(--ink)}
 .pane{display:none;max-width:820px;margin:0 auto;padding:40px 32px}
@@ -29,21 +29,26 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .btn{background:var(--ink);color:#fff;border:none;padding:14px 28px;font-family:'Inter',sans-serif;font-size:.78em;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;transition:opacity .2s;margin-top:4px}
 .btn:hover{opacity:.85}
 .btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-outline{background:transparent;color:var(--ink);border:1px solid var(--ink);padding:10px 20px;font-family:'Inter',sans-serif;font-size:.7em;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-outline:hover{background:var(--ink);color:#fff}
+.btn-gold{background:var(--gold);color:#080808;border:none;padding:10px 20px;font-family:'Inter',sans-serif;font-size:.7em;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:opacity .2s}
+.btn-gold:hover{opacity:.85}
+.btn-gold:disabled{opacity:.4;cursor:not-allowed}
 .error{color:#a00;font-size:.8em;text-align:center;margin:8px 0}
 
-/* PROGRESS STEPS */
+/* PROGRESS */
 .progress-steps{margin:16px 0;display:none}
 .progress-steps.show{display:flex;flex-direction:column;gap:6px}
 .p-step{display:flex;align-items:center;gap:10px;font-size:.78em;color:var(--muted);padding:8px 12px;background:#fff;border:1px solid var(--rule)}
 .p-step.active{color:var(--ink);border-color:var(--ink)}
 .p-step.done{color:var(--green);border-color:var(--green)}
-.p-dot{width:8px;height:8px;border-radius:50%;background:var(--rule);flex-shrink:0;transition:background .3s}
+.p-dot{width:8px;height:8px;border-radius:50%;background:var(--rule);flex-shrink:0}
 .p-step.active .p-dot{background:var(--ink)}
 .p-step.done .p-dot{background:var(--green)}
 
 /* TONE TABS */
-.tone-bar{display:flex;gap:0;border:1px solid var(--rule);margin-bottom:0;background:#fff}
-.tone-tab{flex:1;padding:10px;font-size:.65em;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;border-right:1px solid var(--rule);background:#fff;color:var(--muted);font-family:'Inter',sans-serif;transition:all .2s}
+.tone-bar{display:flex;gap:0;border:1px solid var(--rule);background:#fff}
+.tone-tab{flex:1;padding:10px;font-size:.65em;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;border-right:1px solid var(--rule);background:#fff;color:var(--muted);font-family:'Inter',sans-serif}
 .tone-tab:last-child{border-right:none}
 .tone-tab:hover{background:var(--cream);color:var(--ink)}
 .tone-tab.on{background:var(--ink);color:#fff}
@@ -52,7 +57,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 
 /* REPORT */
 .report-wrap{background:#fff;border:1px solid var(--rule);padding:40px 44px;font-family:'Merriweather',serif;line-height:1.8}
-.report-wrap h1{font-size:1.4em;margin-bottom:8px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:20px}
+.report-wrap h1{font-size:1.4em;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:20px}
 .report-wrap h2{font-size:.72em;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:28px 0 10px;font-family:'Inter',sans-serif;font-weight:700;border-top:1px solid var(--rule);padding-top:20px}
 .report-wrap h3{font-size:.95em;font-weight:700;margin:16px 0 6px;font-family:'Inter',sans-serif}
 .report-wrap p{font-size:.88em;color:#333;margin-bottom:10px}
@@ -60,13 +65,43 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .report-wrap li{font-size:.88em;color:#333;margin-bottom:4px;line-height:1.6}
 .report-wrap strong{font-weight:700;color:var(--ink)}
 .report-footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--rule);font-family:'Inter',sans-serif;font-size:.62em;letter-spacing:2px;text-transform:uppercase;color:#aaa;text-align:center}
-.tone-label{font-size:.6em;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:2px;padding:10px 44px 0;background:#fff;border:1px solid var(--rule);border-bottom:none}
+.tone-label{font-size:.6em;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);padding:10px 44px 0;background:#fff;border:1px solid var(--rule);border-bottom:none}
 .report-actions{display:flex;gap:8px;margin-bottom:0}
 .action-btn{flex:1;background:transparent;border:1px solid var(--rule);padding:10px;font-family:'Inter',sans-serif;font-size:.65em;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .action-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
 
+/* RISK TRACKER */
+.risk-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--rule);margin-bottom:24px}
+.risk-stat{background:#fff;padding:20px;text-align:center}
+.risk-stat-n{font-family:'Merriweather',serif;font-size:2em;font-weight:700;line-height:1}
+.risk-stat-l{font-size:.6em;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.risk-card{background:#fff;border:1px solid var(--rule);padding:18px 20px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+.risk-title{font-size:.88em;font-weight:700;margin-bottom:4px}
+.risk-body{font-size:.8em;color:#555;line-height:1.6}
+.risk-week{font-size:.65em;color:var(--muted);margin-top:6px;font-family:'Inter',sans-serif}
+.risk-badge{padding:4px 10px;font-size:.6em;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;height:fit-content}
+.badge-open{background:#fee;color:var(--red);border:1px solid #fcc}
+.badge-monitoring{background:#fff8ee;color:var(--amber);border:1px solid #fde}
+.badge-resolved{background:#efe;color:#2a7a2a;border:1px solid #cec}
+.risk-section-title{font-size:.65em;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+
+/* ARCHIVE */
+.archive-section-title{font-size:.65em;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.archive-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.archive-item{background:#fff;border:1px solid var(--rule);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .2s}
+.archive-item:hover{border-color:var(--ink)}
+.archive-item.quarterly{border-left:3px solid var(--gold)}
+.archive-week{font-size:.84em;font-weight:600}
+.archive-meta{font-size:.65em;color:var(--muted)}
+.archive-load{font-size:.62em;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.archive-item:hover .archive-load{color:var(--ink)}
+.quarterly-btn-wrap{background:#fff;border:1px solid var(--rule);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.quarterly-btn-info{font-size:.82em;color:#555}
+.quarterly-btn-info strong{color:var(--ink);display:block;margin-bottom:3px}
+.qtr-select{width:auto;margin:0;padding:8px 12px;font-size:.78em}
+
 /* CONTEXT TAB */
-.context-card{background:#fff;border:1px solid var(--rule);margin-bottom:12px;overflow:hidden}
+.context-card{background:#fff;border:1px solid var(--rule);margin-bottom:8px;overflow:hidden}
 .context-card-header{padding:14px 20px;background:var(--cream);border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;cursor:pointer}
 .context-card-title{font-size:.72em;font-weight:700;letter-spacing:1px;text-transform:uppercase}
 .context-card-meta{font-size:.65em;color:var(--muted);font-family:'JetBrains Mono',monospace}
@@ -75,22 +110,33 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 .depth-bar{height:4px;background:var(--rule);margin-bottom:24px}
 .depth-fill{height:100%;background:var(--gold);transition:width 1s ease}
 .depth-label{font-size:.65em;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
-.ctx-load-btn{background:var(--ink);color:#fff;border:none;padding:10px 20px;font-family:'Inter',sans-serif;font-size:.7em;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-bottom:20px}
-.empty{text-align:center;color:var(--muted);font-size:.85em;padding:40px 0;font-style:italic}
 
-/* ARCHIVE */
-.archive-list{display:flex;flex-direction:column;gap:8px;margin-top:16px}
-.archive-item{background:#fff;border:1px solid var(--rule);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .2s}
-.archive-item:hover{border-color:var(--ink)}
-.archive-week{font-size:.84em;font-weight:600}
-.archive-load{font-size:.62em;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
-.archive-item:hover .archive-load{color:var(--ink)}
+.empty{text-align:center;color:var(--muted);font-size:.85em;padding:40px 0;font-style:italic}
+.gen-status{font-size:.8em;color:var(--muted);font-style:italic;margin-top:10px;text-align:center}
+
+/* ── PRINT / PDF STYLESHEET ── */
+@media print {
+  body{background:#fff;font-family:Georgia,serif}
+  nav,.tab-bar,.report-actions,.tone-bar,.action-btn,.btn,.btn-outline,.tone-label{display:none!important}
+  .pane{display:block!important;max-width:100%;padding:0;margin:0}
+  #pane-submit,#pane-archive,#pane-context,#pane-risks{display:none!important}
+  #pane-report{display:block!important}
+  .tone-pane{display:none!important}
+  .tone-pane.on{display:block!important}
+  .report-wrap{border:none;padding:0;box-shadow:none;font-size:11pt;line-height:1.6}
+  .report-wrap h1{font-size:18pt;page-break-after:avoid}
+  .report-wrap h2{font-size:9pt;page-break-after:avoid;margin-top:20pt}
+  .report-wrap h3{font-size:11pt;page-break-after:avoid}
+  .report-wrap p,.report-wrap li{font-size:10pt;color:#000}
+  .report-footer{font-size:8pt;margin-top:24pt}
+  @page{margin:2cm;size:A4}
+}
 
 @media(max-width:600px){
   nav{padding:0 16px}
-  .pane{padding:28px 16px}
+  .pane{padding:24px 16px}
   .report-wrap{padding:24px 20px}
-  .tone-label{padding:8px 20px 0}
+  .risk-summary{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -102,6 +148,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 <div class="tab-bar">
   <button class="tab on"  onclick="showTab('submit',this)">Submit Notes</button>
   <button class="tab"    onclick="showTab('report',this)">Latest Report</button>
+  <button class="tab"    onclick="showTab('risks',this);loadRisks()">Risk Tracker</button>
   <button class="tab"    onclick="showTab('archive',this);loadArchive()">Archive</button>
   <button class="tab"    onclick="showTab('context',this);loadContext()">Context Depth</button>
 </div>
@@ -115,12 +162,12 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   <label>Report Tone</label>
   <select id="toneSelect">
     <option value="all">All Three — Donor + Team + Community (recommended)</option>
-    <option value="donor">Donor Report only — formal, evidence-based</option>
-    <option value="team">Team Brief only — concise, action-oriented</option>
-    <option value="community">Community Update only — plain language</option>
+    <option value="donor">Donor Report only</option>
+    <option value="team">Team Brief only</option>
+    <option value="community">Community Update only</option>
   </select>
   <label for="notes">Field Notes</label>
-  <textarea id="notes" rows="11" placeholder="Write anything — bullet points, sentences, voice-note transcription. What happened this week? Who did you speak with? What worked? What didn't? Numbers, observations, community feedback."></textarea>
+  <textarea id="notes" rows="11" placeholder="Write anything — bullet points, sentences, voice-note transcription. What happened? Who did you speak with? What worked? What didn't? Numbers, observations, community feedback."></textarea>
   <div id="err" class="error"></div>
   <div class="progress-steps" id="progSteps">
     <div class="p-step" id="ps1"><div class="p-dot"></div>Pulling project context from GitHub</div>
@@ -136,6 +183,11 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
   <div id="reportContent"><div class="empty">No report yet. Submit field notes to generate your first report.</div></div>
 </div>
 
+<!-- RISK TRACKER -->
+<div class="pane" id="pane-risks">
+  <div id="risksContent"><div class="empty">Loading risks...</div></div>
+</div>
+
 <!-- ARCHIVE -->
 <div class="pane" id="pane-archive">
   <div id="archiveContent"><div class="empty">Loading...</div></div>
@@ -143,29 +195,23 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 
 <!-- CONTEXT DEPTH -->
 <div class="pane" id="pane-context">
-  <div id="contextContent">
-    <div class="empty">Enter your password on the Submit tab, then come back here.</div>
-  </div>
+  <div id="contextContent"><div class="empty">Enter password on Submit tab first.</div></div>
 </div>
 
 <script>
-// ── Tabs ──────────────────────────────────────────────────────
+// ── Tabs ──────────────────────────────────────────────
 function showTab(id, btn) {
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   document.getElementById('pane-' + id).classList.add('on');
   btn.classList.add('on');
 }
-
-// ── Tone tabs in report ────────────────────────────────────────
 function showTone(id, btn) {
   document.querySelectorAll('.tone-pane').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.tone-tab').forEach(t => t.classList.remove('on'));
   document.getElementById('tone-' + id).classList.add('on');
   btn.classList.add('on');
 }
-
-// ── Progress steps ─────────────────────────────────────────────
 function setStep(n) {
   for (let i = 1; i <= 4; i++) {
     const el = document.getElementById('ps' + i);
@@ -174,10 +220,9 @@ function setStep(n) {
     if (i === n) el.classList.add('active');
   }
 }
-
 function pw() { return document.getElementById('pw').value.trim(); }
 
-// ── Markdown to HTML ───────────────────────────────────────────
+// ── Markdown parser ────────────────────────────────────
 function mdToHtml(md) {
   if (!md) return '';
   return md
@@ -188,44 +233,38 @@ function mdToHtml(md) {
     .replace(/^- (.+)$/gm, '<li>$1</li>')
     .replace(/(<li>.+<\/li>\n?)+/g, m => '<ul>' + m + '</ul>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/^(?!<[hul])/gm, '');
+    .replace(/\n\n/g, '</p><p>');
 }
 
+// ── Render report tabs ─────────────────────────────────
 function renderReports(data) {
   const tones = [
-    { key: 'donor_report',      label: 'Donor Report',      desc: 'Formal · Evidence-based · Funder-ready' },
-    { key: 'team_brief',        label: 'Team Brief',         desc: 'Concise · Action-oriented · Internal' },
-    { key: 'community_update',  label: 'Community Update',   desc: 'Plain language · Accessible · Community-facing' }
+    { key: 'donor_report',     label: 'Donor Report',    desc: 'Formal · Evidence-based · Funder-ready' },
+    { key: 'team_brief',       label: 'Team Brief',      desc: 'Concise · Action-oriented · Internal' },
+    { key: 'community_update', label: 'Community Update', desc: 'Plain language · Accessible · Community-facing' }
   ];
-
-  // Only show tones that exist in response
   const available = tones.filter(t => data[t.key]);
   if (!available.length) return;
 
-  const toneTabs = available.map((t, i) =>
+  const toneTabs  = available.map((t,i) =>
     `<button class="tone-tab ${i===0?'on':''}" onclick="showTone('${t.key}',this)">${t.label}</button>`
   ).join('');
-
-  const tonePanes = available.map((t, i) => `
+  const tonePanes = available.map((t,i) => `
     <div class="tone-pane ${i===0?'on':''}" id="tone-${t.key}">
       <div class="tone-label">${t.desc}</div>
       <div class="report-wrap"><p>${mdToHtml(data[t.key])}</p>
         <div class="report-footer">Field Intelligence OS · Kanazi · ${data.weekLabel}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 
   document.getElementById('reportContent').innerHTML = `
     <div class="report-actions" style="margin-bottom:8px">
       <button class="action-btn" onclick="window.print()">⬇ Save as PDF</button>
     </div>
-    <div class="tone-bar">${toneTabs}</div>
-    ${tonePanes}
-  `;
+    <div class="tone-bar">${toneTabs}</div>${tonePanes}`;
 }
 
-// ── Submit ─────────────────────────────────────────────────────
+// ── Submit weekly notes ────────────────────────────────
 async function submitNotes() {
   const notes = document.getElementById('notes').value.trim();
   const wk    = document.getElementById('wk').value.trim();
@@ -235,38 +274,31 @@ async function submitNotes() {
   const prog  = document.getElementById('progSteps');
 
   errEl.textContent = '';
-  if (!pw())    { errEl.textContent = 'Enter your access password.'; return; }
-  if (!wk)      { errEl.textContent = 'Enter a week label (e.g. 2026-W12).'; return; }
+  if (!pw())   { errEl.textContent = 'Enter your access password.'; return; }
+  if (!wk)     { errEl.textContent = 'Enter a week label (e.g. 2026-W12).'; return; }
   if (!notes || notes.length < 20) { errEl.textContent = 'Add more detail to your notes.'; return; }
 
-  btn.disabled = true;
-  prog.classList.add('show');
-  setStep(1);
+  btn.disabled = true; prog.classList.add('show'); setStep(1);
 
   try {
     setStep(2);
-    const res = await fetch('/api/ingest', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pw(), weekLabel: wk, notes, tone })
+    const res  = await fetch('/api/ingest', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password:pw(), weekLabel:wk, notes, tone })
     });
     setStep(3);
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Generation failed');
     setStep(4);
-
-    // Mark all done after short delay
     setTimeout(() => {
-      for (let i = 1; i <= 4; i++) {
+      for (let i=1;i<=4;i++) {
         document.getElementById('ps'+i).classList.add('done');
         document.getElementById('ps'+i).classList.remove('active');
       }
     }, 600);
-
     data.weekLabel = wk;
     renderReports(data);
     showTab('report', document.querySelectorAll('.tab')[1]);
-
   } catch(e) {
     errEl.textContent = 'Error: ' + e.message;
     prog.classList.remove('show');
@@ -274,99 +306,246 @@ async function submitNotes() {
   btn.disabled = false;
 }
 
-// ── Archive ────────────────────────────────────────────────────
+// ── Risk Tracker ───────────────────────────────────────
+async function loadRisks() {
+  const el = document.getElementById('risksContent');
+  if (!pw()) { el.innerHTML = '<div class="empty">Enter password on Submit tab first.</div>'; return; }
+  el.innerHTML = '<div class="empty">Loading risks from context store...</div>';
+
+  try {
+    const res  = await fetch('/api/generate', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password:pw(), file:'risks' })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    // Parse risks.md into structured cards
+    const lines  = (data.context || '').split('\n').filter(Boolean);
+    const risks  = [];
+    let current  = null;
+
+    lines.forEach(line => {
+      if (line.startsWith('##') || line.startsWith('#')) return;
+      if (line.startsWith('**') || line.startsWith('- **') || line.match(/^\d+\./)) {
+        if (current) risks.push(current);
+        const title  = line.replace(/^[\-\*\d\.\s]+/, '').replace(/\*\*/g,'').trim();
+        const status = line.toLowerCase().includes('[resolved]') ? 'resolved'
+                     : line.toLowerCase().includes('monitor')    ? 'monitoring'
+                     : 'open';
+        current = { title, status, body: '', week: '' };
+      } else if (current) {
+        if (line.toLowerCase().startsWith('week') || line.match(/\d{4}-W\d+/)) {
+          current.week = line.trim();
+        } else {
+          current.body += ' ' + line.trim();
+        }
+      }
+    });
+    if (current) risks.push(current);
+
+    // Fallback: split by lines if parsing yielded nothing
+    const open       = risks.filter(r => r.status === 'open');
+    const monitoring = risks.filter(r => r.status === 'monitoring');
+    const resolved   = risks.filter(r => r.status === 'resolved');
+
+    const riskCard = r => `
+      <div class="risk-card">
+        <div>
+          <div class="risk-title">${r.title}</div>
+          ${r.body ? `<div class="risk-body">${r.body.trim()}</div>` : ''}
+          ${r.week ? `<div class="risk-week">${r.week}</div>` : ''}
+        </div>
+        <div class="risk-badge badge-${r.status}">${r.status}</div>
+      </div>`;
+
+    if (!risks.length) {
+      el.innerHTML = `
+        <div class="risk-summary">
+          <div class="risk-stat"><div class="risk-stat-n" style="color:var(--red)">0</div><div class="risk-stat-l">Open</div></div>
+          <div class="risk-stat"><div class="risk-stat-n" style="color:var(--amber)">0</div><div class="risk-stat-l">Monitoring</div></div>
+          <div class="risk-stat"><div class="risk-stat-n" style="color:var(--green)">0</div><div class="risk-stat-l">Resolved</div></div>
+        </div>
+        <div class="empty">No risks logged yet. They accumulate automatically after each weekly submission.</div>`;
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="risk-summary">
+        <div class="risk-stat"><div class="risk-stat-n" style="color:var(--red)">${open.length}</div><div class="risk-stat-l">Open</div></div>
+        <div class="risk-stat"><div class="risk-stat-n" style="color:var(--amber)">${monitoring.length}</div><div class="risk-stat-l">Monitoring</div></div>
+        <div class="risk-stat"><div class="risk-stat-n" style="color:var(--green)">${resolved.length}</div><div class="risk-stat-l">Resolved</div></div>
+      </div>
+      ${open.length       ? `<div class="risk-section-title">Open</div>${open.map(riskCard).join('')}` : ''}
+      ${monitoring.length ? `<div class="risk-section-title">Monitoring</div>${monitoring.map(riskCard).join('')}` : ''}
+      ${resolved.length   ? `<div class="risk-section-title">Resolved</div>${resolved.map(riskCard).join('')}` : ''}`;
+
+  } catch(e) {
+    el.innerHTML = '<div class="empty">Error: ' + e.message + '</div>';
+  }
+}
+
+// ── Archive + Quarterly ────────────────────────────────
 async function loadArchive() {
   const el = document.getElementById('archiveContent');
   if (!pw()) { el.innerHTML = '<div class="empty">Enter password on Submit tab first.</div>'; return; }
   el.innerHTML = '<div class="empty">Loading...</div>';
+
   try {
     const res  = await fetch('/api/dashboard', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ password: pw() })
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password:pw() })
     });
     const data = await res.json();
-    if (!data.reports?.length) { el.innerHTML = '<div class="empty">No reports yet.</div>'; return; }
-    el.innerHTML = '<div class="archive-list">' +
-      data.reports.map(r =>
-        `<div class="archive-item" onclick="loadReport('${r.weekLabel}')">
-          <div class="archive-week">${r.weekLabel}</div>
-          <div class="archive-load">View →</div>
-        </div>`
-      ).join('') + '</div>';
+
+    // Quarter options from available reports
+    const reports    = data.reports || [];
+    const quarters   = data.quarterly || [];
+    const qOptions   = [...new Set(reports.map(r => {
+      const m = r.weekLabel.match(/(\d{4})-W(\d+)/);
+      if (!m) return null;
+      const q = Math.ceil(parseInt(m[2]) / 13);
+      return `${m[1]}-Q${q}`;
+    }).filter(Boolean))];
+
+    const qSelectOptions = qOptions.map(q => `<option value="${q}">${q}</option>`).join('');
+
+    let html = `
+      <div class="quarterly-btn-wrap">
+        <div class="quarterly-btn-info">
+          <strong>Generate Quarterly Synthesis</strong>
+          One click. All weekly reports synthesised into a donor-ready quarterly report.
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select class="qtr-select" id="qtrSelect">${qSelectOptions || '<option>No data yet</option>'}</select>
+          <button class="btn-gold" id="qtrBtn" onclick="generateQuarterly()" ${!qOptions.length?'disabled':''}>Generate Q Report →</button>
+        </div>
+      </div>
+      <div class="gen-status" id="qtrStatus"></div>`;
+
+    if (quarters.length) {
+      html += `<div class="archive-section-title">Quarterly Reports</div>
+        <div class="archive-list">` +
+        quarters.map(q => `
+          <div class="archive-item quarterly" onclick="loadQuarterlyReport('${q.label}')">
+            <div><div class="archive-week">${q.label}</div><div class="archive-meta">Quarterly synthesis</div></div>
+            <div class="archive-load">View →</div>
+          </div>`).join('') + '</div>';
+    }
+
+    if (reports.length) {
+      html += `<div class="archive-section-title">Weekly Reports</div>
+        <div class="archive-list">` +
+        reports.map(r => `
+          <div class="archive-item" onclick="loadReport('${r.weekLabel}')">
+            <div class="archive-week">${r.weekLabel}</div>
+            <div class="archive-load">View →</div>
+          </div>`).join('') + '</div>';
+    } else {
+      html += '<div class="empty">No weekly reports yet.</div>';
+    }
+
+    el.innerHTML = html;
   } catch(e) { el.innerHTML = '<div class="empty">Error: ' + e.message + '</div>'; }
+}
+
+async function generateQuarterly() {
+  const quarter = document.getElementById('qtrSelect')?.value;
+  const btn     = document.getElementById('qtrBtn');
+  const status  = document.getElementById('qtrStatus');
+  if (!quarter) return;
+
+  btn.disabled   = true;
+  status.textContent = `Generating ${quarter} synthesis — synthesising all weekly reports...`;
+
+  try {
+    const res  = await fetch('/api/synthesise', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password:pw(), quarter })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    status.textContent = `${quarter} synthesis complete. Saved to GitHub.`;
+    data.weekLabel = quarter + ' Synthesis';
+    data.donor_report = data.synthesis;
+    renderReports(data);
+    showTab('report', document.querySelectorAll('.tab')[1]);
+    loadArchive();
+  } catch(e) {
+    status.textContent = 'Error: ' + e.message;
+  }
+  btn.disabled = false;
 }
 
 async function loadReport(weekLabel) {
   try {
     const res  = await fetch('/api/dashboard', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ password: pw(), weekLabel })
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password:pw(), weekLabel })
     });
     const data = await res.json();
     data.weekLabel = weekLabel;
-    // Treat archived report as donor_report for display
     if (data.report && !data.donor_report) data.donor_report = data.report;
     renderReports(data);
     showTab('report', document.querySelectorAll('.tab')[1]);
   } catch(e) { alert('Could not load: ' + e.message); }
 }
 
-// ── Context Depth ──────────────────────────────────────────────
+async function loadQuarterlyReport(label) {
+  try {
+    const res  = await fetch('/api/dashboard', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password:pw(), quarterLabel:label })
+    });
+    const data = await res.json();
+    data.weekLabel = label;
+    data.donor_report = data.report;
+    renderReports(data);
+    showTab('report', document.querySelectorAll('.tab')[1]);
+  } catch(e) { alert('Could not load: ' + e.message); }
+}
+
+// ── Context Depth ──────────────────────────────────────
 async function loadContext() {
   const el = document.getElementById('contextContent');
   if (!pw()) { el.innerHTML = '<div class="empty">Enter password on Submit tab first.</div>'; return; }
-
   el.innerHTML = '<div class="empty">Pulling context from GitHub...</div>';
-
   try {
     const res  = await fetch('/api/generate', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ password: pw() })
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password:pw() })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-
-    const tokens = data.tokenEstimate || 0;
-    const maxCtx = 100000;
-    const pct    = Math.min(Math.round(tokens / maxCtx * 100), 100);
-
-    // Split context into sections
+    const tokens  = data.tokenEstimate || 0;
+    const pct     = Math.min(Math.round(tokens/100000*100),100);
     const sections = data.context.split('\n\n---\n\n').map(s => {
       const lines  = s.split('\n');
       const header = lines[0].replace('## CONTEXT: ','').replace('## ','');
       const body   = lines.slice(1).join('\n').trim();
       return { header, body };
     });
-
-    const sectionHTML = sections.map(s => `
+    const sHTML = sections.map(s => `
       <div class="context-card">
         <div class="context-card-header" onclick="this.nextElementSibling.classList.toggle('open')">
           <div class="context-card-title">${s.header}</div>
           <div class="context-card-meta">~${Math.round(s.body.length/4)} tokens · click to expand</div>
         </div>
         <div class="context-card-body">${s.body}</div>
-      </div>
-    `).join('');
-
+      </div>`).join('');
     el.innerHTML = `
       <div style="margin-bottom:24px">
         <div style="font-family:'Merriweather',serif;font-size:1.1em;font-weight:700;margin-bottom:4px">Context Intelligence Depth</div>
         <div style="font-size:.78em;color:var(--muted);margin-bottom:16px">This is exactly what the AI knows before generating each report.</div>
-        <div class="depth-label">
-          <span>Current depth</span>
-          <span style="color:var(--gold);font-weight:700">~${tokens.toLocaleString()} tokens · ${sections.length} context files</span>
-        </div>
+        <div class="depth-label"><span>Current depth</span><span style="color:var(--gold);font-weight:700">~${tokens.toLocaleString()} tokens · ${sections.length} context files</span></div>
         <div class="depth-bar"><div class="depth-fill" style="width:${pct}%"></div></div>
-        <div style="font-size:.7em;color:#aaa">Context grows automatically with every weekly submission. At 6 months it will contain the complete operational memory of this project.</div>
-      </div>
-      ${sectionHTML}
-    `;
-  } catch(e) {
-    el.innerHTML = '<div class="empty">Error: ' + e.message + '</div>';
-  }
+        <div style="font-size:.7em;color:#aaa">Context grows automatically with every weekly submission.</div>
+      </div>${sHTML}`;
+  } catch(e) { el.innerHTML = '<div class="empty">Error: ' + e.message + '</div>'; }
 }
 
-// ── Auto-fill week ─────────────────────────────────────────────
+// ── Auto-fill week ─────────────────────────────────────
 const now   = new Date();
 const wkNum = Math.ceil((((now - new Date(now.getFullYear(),0,1))/86400000)+1)/7);
 document.getElementById('wk').value = `${now.getFullYear()}-W${String(wkNum).padStart(2,'0')}`;
