@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/ingest",    "dest": "/api/ingest.js" },
+    { "src": "/api/generate",  "dest": "/api/generate.js" },
+    { "src": "/api/dashboard", "dest": "/api/dashboard.js" },
+    { "src": "/(.*)",          "dest": "/public/index.html" }
+  ]
+}

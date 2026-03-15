@@ -1,0 +1,12 @@
+{
+  "name": "field-intelligence-os",
+  "version": "1.0.0",
+  "description": "Field Intelligence OS — Loop Methodology, Class I Deployment",
+  "main": "api/ingest.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}

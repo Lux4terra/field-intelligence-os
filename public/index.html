@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Intelligence OS — Kanazi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+:root{--ink:#080808;--cream:#f8f6f0;--gold:#c9a84c;--rule:#e0ddd5;--muted:#777}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+nav{background:var(--ink);padding:0 32px;height:50px;display:flex;align-items:center;justify-content:space-between}
+.nav-title{font-family:'Merriweather',serif;font-size:.78em;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff}
+.nav-tag{font-size:.6em;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid #333;padding:4px 10px}
+.tab-bar{background:#fff;border-bottom:2px solid var(--ink);padding:0 32px;display:flex;gap:0}
+.tab{padding:14px 20px;font-size:.72em;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',sans-serif}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--ink);border-bottom-color:var(--ink)}
+.pane{display:none;max-width:800px;margin:0 auto;padding:48px 32px}
+.pane.on{display:block}
+label{font-size:.68em;font-weight:700;letter-spacing:2px;text-transform:uppercase;display:block;color:var(--muted);margin-bottom:6px}
+input,textarea{width:100%;border:1px solid var(--rule);padding:12px 14px;font-family:'Inter',sans-serif;font-size:.9em;outline:none;background:#fff;margin-bottom:20px}
+input[type=password]{letter-spacing:2px}
+input:focus,textarea:focus{border-color:var(--ink)}
+textarea{resize:vertical;line-height:1.6}
+.btn{background:var(--ink);color:#fff;border:none;padding:14px 28px;font-family:'Inter',sans-serif;font-size:.78em;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.status{text-align:center;font-size:.8em;color:var(--muted);font-style:italic;margin-top:12px;min-height:20px}
+.error{color:#a00;font-size:.82em;text-align:center;margin-top:10px}
+.report-wrap{background:#fff;border:1px solid var(--rule);padding:40px 44px;font-family:'Merriweather',serif;line-height:1.8}
+.report-wrap h1{font-size:1.5em;margin-bottom:8px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:20px}
+.report-wrap h2{font-size:.75em;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:28px 0 10px;font-family:'Inter',sans-serif;font-weight:700;border-top:1px solid var(--rule);padding-top:20px}
+.report-wrap h3{font-size:.95em;font-weight:700;margin:16px 0 6px;font-family:'Inter',sans-serif}
+.report-wrap p{font-size:.9em;color:#333;margin-bottom:12px}
+.report-wrap strong{font-weight:700;color:var(--ink)}
+.report-footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--rule);font-family:'Inter',sans-serif;font-size:.65em;letter-spacing:2px;text-transform:uppercase;color:#aaa;text-align:center}
+.archive-list{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.archive-item{background:#fff;border:1px solid var(--rule);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .2s}
+.archive-item:hover{border-color:var(--ink)}
+.archive-week{font-size:.85em;font-weight:600}
+.archive-load{font-size:.65em;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.archive-item:hover .archive-load{color:var(--ink)}
+.empty{text-align:center;color:var(--muted);font-size:.85em;padding:40px 0;font-style:italic}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-title">Field Intelligence OS</div>
+  <div class="nav-tag">Kanazi · Bugesera</div>
+</nav>
+<div class="tab-bar">
+  <button class="tab on" onclick="showTab('submit',this)">Submit Notes</button>
+  <button class="tab" onclick="showTab('report',this)">Latest Report</button>
+  <button class="tab" onclick="showTab('archive',this);loadArchive()">Archive</button>
+</div>
+
+<!-- SUBMIT TAB -->
+<div class="pane on" id="pane-submit">
+  <label for="pw">Access Password</label>
+  <input type="password" id="pw" placeholder="Enter password">
+  <label for="wk">Week Label (e.g. 2026-W12)</label>
+  <input type="text" id="wk" placeholder="2026-W12">
+  <label for="notes">Field Notes</label>
+  <textarea id="notes" rows="12" placeholder="Write anything — bullet points, sentences, voice-note transcription. What happened this week? Who did you speak with? What worked? What didn't? Any numbers, observations, or community feedback."></textarea>
+  <div id="err" class="error"></div>
+  <button class="btn" id="submitBtn" onclick="submitNotes()">Generate Report →</button>
+  <div class="status" id="st"></div>
+</div>
+
+<!-- REPORT TAB -->
+<div class="pane" id="pane-report">
+  <div id="reportContent"><div class="empty">No report generated yet. Submit field notes to generate your first report.</div></div>
+</div>
+
+<!-- ARCHIVE TAB -->
+<div class="pane" id="pane-archive">
+  <div id="archiveContent"><div class="empty">Loading archive...</div></div>
+</div>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('pane-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+function pw() { return document.getElementById('pw').value.trim(); }
+
+function renderReport(md, weekLabel) {
+  const html = md
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<[h123])/gm, '');
+  return `<div class="report-wrap"><p>${html}</p>
+    <div class="report-footer">Field Intelligence OS · Kanazi · ${weekLabel}</div>
+  </div>`;
+}
+
+async function submitNotes() {
+  const notes = document.getElementById('notes').value.trim();
+  const wk    = document.getElementById('wk').value.trim();
+  const errEl = document.getElementById('err');
+  const stEl  = document.getElementById('st');
+  const btn   = document.getElementById('submitBtn');
+
+  errEl.textContent = '';
+  if (!pw())    { errEl.textContent = 'Enter the access password.'; return; }
+  if (!wk)      { errEl.textContent = 'Enter a week label (e.g. 2026-W12).'; return; }
+  if (!notes || notes.length < 20) { errEl.textContent = 'Add more detail to your notes.'; return; }
+
+  btn.disabled = true;
+  stEl.textContent = 'Pulling project context from GitHub...';
+
+  try {
+    stEl.textContent = 'Generating report with AI...';
+    const res = await fetch('/api/ingest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw(), weekLabel: wk, notes })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Generation failed');
+
+    stEl.textContent = `Report generated with ${data.model}. Saved to GitHub. Emails sent.`;
+    document.getElementById('reportContent').innerHTML = renderReport(data.report, data.weekLabel);
+    showTab('report', document.querySelectorAll('.tab')[1]);
+  } catch(e) {
+    errEl.textContent = 'Error: ' + e.message;
+    stEl.textContent = '';
+  }
+  btn.disabled = false;
+}
+
+async function loadArchive() {
+  const el = document.getElementById('archiveContent');
+  if (!pw()) { el.innerHTML = '<div class="empty">Enter password on the Submit tab first.</div>'; return; }
+  el.innerHTML = '<div class="empty">Loading...</div>';
+  try {
+    const res = await fetch('/api/dashboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw() })
+    });
+    const data = await res.json();
+    if (!data.reports?.length) { el.innerHTML = '<div class="empty">No reports yet.</div>'; return; }
+    el.innerHTML = '<div class="archive-list">' +
+      data.reports.map(r =>
+        `<div class="archive-item" onclick="loadReport('${r.weekLabel}')">
+          <div class="archive-week">${r.weekLabel}</div>
+          <div class="archive-load">View →</div>
+        </div>`
+      ).join('') + '</div>';
+  } catch(e) { el.innerHTML = '<div class="empty">Error: ' + e.message + '</div>'; }
+}
+
+async function loadReport(weekLabel) {
+  try {
+    const res = await fetch('/api/dashboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw(), weekLabel })
+    });
+    const data = await res.json();
+    document.getElementById('reportContent').innerHTML = renderReport(data.report, weekLabel);
+    showTab('report', document.querySelectorAll('.tab')[1]);
+  } catch(e) { alert('Could not load report: ' + e.message); }
+}
+
+// Auto-fill week label
+const now = new Date();
+const wkNum = Math.ceil((((now - new Date(now.getFullYear(),0,1))/86400000)+1)/7);
+document.getElementById('wk').value = `${now.getFullYear()}-W${String(wkNum).padStart(2,'0')}`;
+</script>
+</body>
+</html>
