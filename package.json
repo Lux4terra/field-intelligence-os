@@ -1,6 +1,6 @@
 {
   "name": "field-intelligence-os",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Field Intelligence OS — Loop Methodology, Class I Deployment",
   "main": "api/ingest.js",
   "scripts": {
