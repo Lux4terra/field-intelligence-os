@@ -376,22 +376,39 @@ async function loadRisks() {
     let current  = null;
 
     lines.forEach(line => {
-      if (line.startsWith('##') || line.startsWith('#')) return;
-      if (line.startsWith('**') || line.startsWith('- **') || line.match(/^\d+\./)) {
-        if (current) risks.push(current);
-        const title  = line.replace(/^[\-\*\d\.\s]+/, '').replace(/\*\*/g,'').trim();
-        const status = line.toLowerCase().includes('[resolved]') ? 'resolved'
-                     : line.toLowerCase().includes('monitor')    ? 'monitoring'
-                     : 'open';
-        current = { title, status, body: '', week: '' };
-      } else if (current) {
-        if (line.toLowerCase().startsWith('week') || line.match(/\d{4}-W\d+/)) {
-          current.week = line.trim();
-        } else {
-          current.body += ' ' + line.trim();
-        }
-      }
-    });
+  if (line.startsWith('##') || line.startsWith('#')) return;
+  if (line.startsWith('**') || line.startsWith('- **') || line.match(/^\d+\./)) {
+    if (current) risks.push(current);
+
+    // Extract title — text between ** markers, before the colon
+    const titleMatch = line.match(/\*\*([^*]+)\*\*/);
+    const rawTitle   = titleMatch ? titleMatch[1].trim() : 
+                       line.replace(/^[\-\*\d\.\s]+/, '').split(':')[0].trim();
+
+    // Extract status — handles both "Status: RESOLVED" and "[RESOLVED]"
+    const statusMatch = line.match(/status:\s*(open|monitoring|resolved)/i) ||
+                        line.match(/\[(open|monitoring|resolved)\]/i);
+    const status = statusMatch
+      ? statusMatch[1].toLowerCase()
+      : line.toLowerCase().includes('resolved') ? 'resolved'
+      : line.toLowerCase().includes('monitor')  ? 'monitoring'
+      : 'open';
+
+    // Extract body — text after ** title **: but before Status:
+    const bodyMatch = line.match(/\*\*[^*]+\*\*:\s*([^.]+(?:\.[^S][^t][^a][^t][^u][^s])*)/);
+    const body = bodyMatch 
+      ? bodyMatch[1].replace(/\.\s*Status:.*/i, '').trim()
+      : '';
+
+    current = { title: rawTitle, status, body, week: '' };
+  } else if (current) {
+    if (line.toLowerCase().startsWith('week') || line.match(/\d{4}-W\d+/)) {
+      current.week = line.trim();
+    } else if (!line.toLowerCase().startsWith('status:')) {
+      current.body += ' ' + line.trim();
+    }
+  }
+});
     if (current) risks.push(current);
 
     // Fallback: split by lines if parsing yielded nothing
