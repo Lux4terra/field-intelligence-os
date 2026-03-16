@@ -113,7 +113,7 @@ numeric indicator rows. Quality is the standard.`;
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.6, maxOutputTokens: 8192 }
+          generationConfig: { temperature: 0.6, maxOutputTokens: 32768 }
         })
       }
     );
