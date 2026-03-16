@@ -7,6 +7,55 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
 :root{--ink:#080808;--cream:#f8f6f0;--gold:#c9a84c;--rule:#e0ddd5;--muted:#777;--green:#4caf88;--red:#cc4444;--amber:#e8a020}
+/* ── DARK THEME ── */
+body.dark{background:#0a0a0a;color:#ccc}
+body.dark nav{background:#080808;border-bottom:1px solid #1e1e1e}
+body.dark .tab-bar{background:#0d0d0d;border-bottom-color:#fff}
+body.dark .tab{color:#555}
+body.dark .tab.on{color:#fff;border-bottom-color:#fff}
+body.dark .pane{}
+body.dark input,
+body.dark textarea,
+body.dark select{background:#0d0d0d;border-color:#1e1e1e;color:#ccc}
+body.dark input:focus,
+body.dark textarea:focus,
+body.dark select:focus{border-color:#888}
+body.dark .btn{background:#fff;color:#080808}
+body.dark .report-wrap{background:#0d0d0d;border-color:#1e1e1e;color:#ccc}
+body.dark .report-wrap h1{border-bottom-color:#fff;color:#fff}
+body.dark .report-wrap h2{color:#555;border-top-color:#1e1e1e}
+body.dark .report-wrap p,.dark .report-wrap li{color:#888}
+body.dark .report-wrap strong{color:#ccc}
+body.dark .report-footer{color:#333;border-top-color:#1e1e1e}
+body.dark .tone-bar{background:#0d0d0d}
+body.dark .tone-tab{background:#0d0d0d;color:#555;border-right-color:#1e1e1e}
+body.dark .tone-tab.on{background:#fff;color:#080808}
+body.dark .tone-label{background:#0d0d0d;border-color:#1e1e1e;color:var(--gold)}
+body.dark .action-btn{border-color:#1e1e1e;color:#555}
+body.dark .action-btn:hover{background:#fff;color:#080808;border-color:#fff}
+body.dark .archive-item{background:#0d0d0d;border-color:#1e1e1e}
+body.dark .archive-item:hover{border-color:#fff}
+body.dark .context-card{background:#0d0d0d;border-color:#1e1e1e}
+body.dark .context-card-header{background:#080808;border-bottom-color:#1e1e1e}
+body.dark .context-card-title{color:#bbb}
+body.dark .context-card-body{color:#555;border-top-color:#1e1e1e}
+body.dark .risk-card{background:#0d0d0d;border-color:#1e1e1e}
+body.dark .risk-stat{background:#080808}
+body.dark .risk-stat-n{color:#bbb}
+body.dark .quarterly-btn-wrap{background:#0d0d0d;border-color:#1e1e1e}
+body.dark .depth-bar{background:#1e1e1e}
+body.dark .p-step{background:#0d0d0d;border-color:#1e1e1e}
+
+/* Theme toggle button */
+.theme-btn{
+  background:none;border:1px solid #333;color:#555;
+  padding:5px 12px;font-family:'Inter',sans-serif;
+  font-size:.6em;font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;cursor:pointer;transition:all .2s;
+}
+body.dark .theme-btn{border-color:#333;color:#555}
+.theme-btn:hover{border-color:#888;color:var(--ink)}
+body.dark .theme-btn:hover{border-color:#888;color:#ccc}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
 nav{background:var(--ink);padding:0 32px;height:50px;display:flex;align-items:center;justify-content:space-between}
@@ -144,6 +193,7 @@ select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%
 <nav>
   <div class="nav-title">Field Intelligence OS</div>
   <div class="nav-tag">Kanazi · Bugesera</div>
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">◑ Dark</button>
 </nav>
 <div class="tab-bar">
   <button class="tab on"  onclick="showTab('submit',this)">Submit Notes</button>
@@ -549,6 +599,20 @@ async function loadContext() {
 const now   = new Date();
 const wkNum = Math.ceil((((now - new Date(now.getFullYear(),0,1))/86400000)+1)/7);
 document.getElementById('wk').value = `${now.getFullYear()}-W${String(wkNum).padStart(2,'0')}`;
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark');
+  const btn    = document.getElementById('themeBtn');
+  btn.textContent = isDark ? '☀ Light' : '◑ Dark';
+  localStorage.setItem('fios_theme', isDark ? 'dark' : 'light');
+}
+(function(){
+  const saved = localStorage.getItem('fios_theme');
+  if (saved === 'dark') {
+    document.body.classList.add('dark');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀ Light';
+  }
+})();
 </script>
 </body>
 </html>

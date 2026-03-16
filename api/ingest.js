@@ -1,46 +1,67 @@
-// api/ingest.js — updated for multi-tone output
+// api/ingest.js — sharpened system prompt v2
 
 const { assembleContext }   = require('../lib/context');
 const { commitWeeklyCycle } = require('../lib/commit');
 const { distributeReport }  = require('../lib/distribute');
 
-const GEMINI_API_KEY   = process.env.GEMINI_API_KEY;
-const ACCESS_PASSWORD  = process.env.ACCESS_PASSWORD;
+const GEMINI_API_KEY  = process.env.GEMINI_API_KEY;
+const ACCESS_PASSWORD = process.env.ACCESS_PASSWORD;
 
-const SYSTEM_PROMPT = `You are the generation engine for Field Intelligence OS.
-You receive raw field notes from the Kanazi Rural Connectivity Project
-team in Bugesera District, Rwanda, plus the full project context.
+const SYSTEM_PROMPT = `You are the generation engine for Field Intelligence OS,
+producing field intelligence reports for the Kanazi Rural Connectivity Project,
+Bugesera District, Rwanda. Team Lead: Eliya (he/him), age 20.
 
-Generate a JSON object with these keys:
+QUALITY STANDARDS — NON-NEGOTIABLE:
+- Every claim must be grounded in the field notes provided. No invention.
+- Include at least 2 DIRECT QUOTES extracted verbatim from the field notes,
+  formatted as: "quote" — Field Notes, [weekLabel]
+- Every indicator row must include: current value, target, % progress, trend.
+- Risks must follow EXACT format (used by the risk tracker parser):
+  **Risk Title**: Description. Status: [OPEN/MONITORING/RESOLVED]
+- Minimum word counts: donor_report 500w, team_brief 200w, community_update 150w.
+- He/him pronouns for Eliya throughout.
+- Write community_update as if speaking directly to Nyamata/Kanazi residents.
+  Use "we" and "you". Avoid all technical jargon.
 
-"donor_report" — Formal, evidence-based markdown report for donors/funders.
-  Sections: ## Summary, ## Progress Against Indicators, ## Community Observations,
-  ## Risks & Issues, ## Next Steps
-  Tone: Professional. Cite numbers. Use bold for key findings.
-  Length: 400-600 words.
+---
 
-"team_brief" — Concise internal markdown brief for the project team.
-  Sections: ## This Week, ## Watch Points, ## Actions This Week
-  Tone: Direct. No fluff. Bullet-heavy. What happened, what needs doing.
-  Length: 150-250 words.
+Generate a JSON object with EXACTLY these keys:
 
-"community_update" — Plain language markdown update suitable for community members.
-  Sections: ## What We Did This Week, ## What We Found Out, ## What Comes Next
-  Tone: Warm, simple, no jargon. Write as if speaking to community members directly.
-  Length: 150-200 words.
+"donor_report" — Formal markdown report. Sections:
+  ## Summary (80-120 words. Lead with the single most significant development.)
+  ## Progress Against Indicators (table format: Indicator | Target | Current | Trend)
+  ## Community Observations (100-150 words. Must include at least 1 direct quote.)
+  ## Risks & Issues (use exact risk format above for each risk)
+  ## Next Steps (bullet list, 3-5 items, each with an owner and timeline)
 
-"context_updates" — object with keys:
-  "patterns": updated patterns.md — add recurring themes (be additive, never delete)
-  "learnings": updated learnings.md — add this week's lessons
-  "risks": updated risks.md — add new risks, mark resolved as [RESOLVED]
-  "community_voice": updated community_voice.md — notable quotes or sentiments
+"team_brief" — Internal markdown brief. Sections:
+  ## This Week (bullet list — facts only, no padding)
+  ## Numbers That Matter (key metrics from this week)
+  ## Watch Points (risks needing attention — be specific)
+  ## Actions This Week (who does what by when)
 
-Rules:
-- Return ONLY valid JSON. No markdown fences. No preamble.
-- He/him pronouns for Eliya throughout all reports.
-- In donor_report and team_brief: render list items as markdown bullets (- item)
-  NOT as asterisks (* item).
-- context_updates: additive only. Never remove existing content.`;
+"community_update" — Plain language markdown. Sections:
+  ## What We Did This Week
+  ## What We Found Out
+  ## What Comes Next
+  (Warm, simple, no jargon. 150-200 words total. Must include 1 community voice quote.)
+
+"context_updates" — Object with:
+  "patterns": Updated patterns.md. ADDITIVE ONLY.
+    Format each pattern as: ### Pattern [N]: [Title]
+    [Description. Evidence count. Implication for project.]
+  "learnings": Updated learnings.md. ADDITIVE ONLY.
+    Format: ### Learning [N] — [weekLabel]
+    [What was learned. How it changes the approach.]
+  "risks": Updated risks.md. ADDITIVE ONLY. Use EXACT format:
+    **[Risk Title]**: [Description]. Status: [OPEN/MONITORING/RESOLVED]
+    Week identified: [weekLabel]
+    (Mark resolved risks as Status: RESOLVED — do not delete them)
+  "community_voice": Updated community_voice.md. ADDITIVE ONLY.
+    Format: > "[Direct quote or paraphrase]" — [Source], [weekLabel]
+    [Context note]
+
+RETURN ONLY valid JSON. No markdown fences. No preamble. No explanation.`;
 
 async function detectModel(apiKey) {
   const res  = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
@@ -54,17 +75,15 @@ module.exports = async function(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { password, weekLabel, notes, tone = 'all' } = req.body;
-
   if (password !== ACCESS_PASSWORD) return res.status(401).json({ error: 'Invalid password' });
   if (!weekLabel || !notes || notes.trim().length < 20)
     return res.status(400).json({ error: 'Week label and notes required' });
 
   try {
-    // Build tone instruction based on selection
     let toneInstruction = '';
-    if (tone === 'donor')     toneInstruction = 'Only generate donor_report. Set team_brief and community_update to empty string "".';
-    if (tone === 'team')      toneInstruction = 'Only generate team_brief. Set donor_report and community_update to empty string "".';
-    if (tone === 'community') toneInstruction = 'Only generate community_update. Set donor_report and team_brief to empty string "".';
+    if (tone === 'donor')     toneInstruction = 'Only generate donor_report. Set team_brief and community_update to "".';
+    if (tone === 'team')      toneInstruction = 'Only generate team_brief. Set donor_report and community_update to "".';
+    if (tone === 'community') toneInstruction = 'Only generate community_update. Set donor_report and team_brief to "".';
 
     const context = await assembleContext();
     const model   = await detectModel(GEMINI_API_KEY);
@@ -74,13 +93,18 @@ ${toneInstruction ? '\nTONE INSTRUCTION: ' + toneInstruction : ''}
 
 ---
 
-## PROJECT CONTEXT
+## PROJECT CONTEXT (assembled from GitHub context store)
 ${context}
 
 ---
 
-## RAW FIELD NOTES (${weekLabel})
-${notes}`;
+## RAW FIELD NOTES — ${weekLabel}
+${notes}
+
+---
+
+Remember: minimum word counts, at least 2 direct quotes, exact risk format,
+numeric indicator rows. Quality is the standard.`;
 
     const genRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
@@ -89,7 +113,7 @@ ${notes}`;
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.65, maxOutputTokens: 8192 }
+          generationConfig: { temperature: 0.6, maxOutputTokens: 8192 }
         })
       }
     );
@@ -104,8 +128,6 @@ ${notes}`;
     if (!rawText) throw new Error('Empty response from Gemini. Try again.');
 
     const parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
-
-    // Save donor_report to GitHub (primary report for archive)
     const primaryReport = parsed.donor_report || parsed.team_brief || parsed.community_update || '';
 
     await commitWeeklyCycle(weekLabel, notes, primaryReport, parsed.context_updates || {});
